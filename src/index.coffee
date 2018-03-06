@@ -1,4 +1,5 @@
 require 'fy'
+require 'fy/experimental'
 window = global
 window.pool_mixin_constructor = (_t)->
 
@@ -18,7 +19,8 @@ window.pool_mixin = (_t, opt={})->
   
   _t.prototype.free = ()->
     if @$ref_count <= 0
-      perr "over free"
+      stack = __STACK__[1]
+      perr "over free #{stack.getFileName()}:#{stack.getLineNumber()}"
       return
     @$ref_count--
     if @$ref_count == 0

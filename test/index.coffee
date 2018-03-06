@@ -8,11 +8,11 @@ describe 'index section >', ()->
       pool_mixin @
       constructor:()->
         pool_mixin_constructor @
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     tmp = A.alloc()
-    assert.equal A.$exposed_objects, 1
+    assert.equal A.$exposed_object_count, 1
     tmp.free()
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     assert.equal A.$pool_list.length, 1
     assert.equal A.$pool_list[0], tmp
     
@@ -32,11 +32,11 @@ describe 'index section >', ()->
         fire_1++
       clear : ()->
         fire_2++
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     tmp = A.alloc()
-    assert.equal A.$exposed_objects, 1
+    assert.equal A.$exposed_object_count, 1
     tmp.free()
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     assert.equal A.$pool_list.length, 1
     assert.equal A.$pool_list[0], tmp
     assert.equal fire_1, 1
@@ -58,13 +58,13 @@ describe 'index section >', ()->
         fire_1++
       clear : ()->
         fire_2++
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     tmp = A.alloc()
-    assert.equal A.$exposed_objects, 1
+    assert.equal A.$exposed_object_count, 1
     tmp.free()
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     tmp.free()
-    assert.equal A.$exposed_objects, 0
+    assert.equal A.$exposed_object_count, 0
     assert.equal fire_1, 1
     assert.equal fire_2, 1
     return
