@@ -4,42 +4,33 @@ window.pool_mixin_constructor = (_t)->
 
 window.pool_mixin = (_t, opt={})->
   _t.$pool_list = []
+  _t.$exposed_objects = 0
+  _t.prototype.$ref_count = 1
   _t.alloc = ()->
+    _t.$exposed_objects++
     if _t.$pool_list.length
-      return _t.$pool_list.pop()
+      ret = _t.$pool_list.pop()
+      ret.$ref_count = 1
+      return ret
     new _t
   
   _t.prototype.free = ()->
-    @delete()
-    @clear()
-    _t.$pool_list.upush @
+    if @$ref_count <= 0
+      perr "over free"
+      return
+    @$ref_count--
+    if @$ref_count == 0
+      _t.$exposed_objects--
+      @delete()
+      @clear()
+      _t.$pool_list.upush @
+      return
     return
   
   _t.prototype.delete ?= ()->
   _t.prototype.clear ?= ()->
   
   if opt.ref
-    _t.prototype.$ref_count = 1
-    
-    _t.alloc = ()->
-      if _t.$pool_list.length
-        ret = _t.$pool_list.pop()
-        ret.$ref_count = 1
-        return ret
-      new _t
-    
-    _t.prototype.free = ()->
-      if @$ref_count <= 0
-        perr "over free"
-        return
-      @$ref_count--
-      if @$ref_count == 0
-        @delete()
-        @clear()
-        _t.$pool_list.upush @
-        return
-      return
-    
     _t.prototype.ref = ()->
       @$ref_count++
       @
