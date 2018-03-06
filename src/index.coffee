@@ -5,9 +5,11 @@ window.pool_mixin_constructor = (_t)->
 window.pool_mixin = (_t, opt={})->
   _t.$pool_list = []
   _t.$exposed_objects = 0
+  _t.$alloc_counter = 0
   _t.prototype.$ref_count = 1
   _t.alloc = ()->
     _t.$exposed_objects++
+    _t.$alloc_counter++
     if _t.$pool_list.length
       ret = _t.$pool_list.pop()
       ret.$ref_count = 1
